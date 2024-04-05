@@ -82,8 +82,8 @@ def add_comment_to_recruit_step():
 @common.route('/common/get_comments_by_recruit_step', methods=['GET'])
 def get_comments_by_recruit_step():
     try:
-        recruit_id: int = int(request.json['recruitId'])
-        step_num: int = int(request.json['stepNum'])
+        recruit_id: int = int(request.args['recruitId'])
+        step_num: int = int(request.args['stepNum'])
     except (KeyError, ValueError):
         return {'msg': 'Invalid data'}, 400
 
