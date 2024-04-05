@@ -7,6 +7,7 @@ from config import (
     PORT,
     DEBUG,
 )
+from models import Base, engine
 from endpoints.boss import boss
 from endpoints.hr import hr
 from endpoints.common import common
@@ -26,6 +27,7 @@ for blueprint in BLUEPRINTS:
 
 
 if __name__ == "__main__":
+    Base.metadata.create_all(bind=engine)  # FixMe
     app.run(
         host=HOST,
         port=PORT,
