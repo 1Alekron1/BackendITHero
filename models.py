@@ -26,7 +26,7 @@ class User(Base):
 class Task(Base):
     __tablename__ = "tasks"
     id = Column(Integer, primary_key=True)
-    recruiter_id = Column(Integer, ForeignKey("users.id"))
+    hr_id = Column(Integer, ForeignKey("users.id"))
     description = Column(Text)
 
 
