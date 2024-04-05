@@ -20,7 +20,7 @@ class User(Base):
     last_name = Column(String(50))
     username = Column(String(50), unique=True)
     password = Column(String(100))
-    is_recruiter = Column(Boolean)
+    is_hr = Column(Boolean)
 
 
 class Task(Base):
