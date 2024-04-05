@@ -10,7 +10,7 @@ login: Blueprint = Blueprint("login", __name__)
 
 
 @login.route("/login", methods=["POST"])
-def login():
+def login_():
     username: str = request.json.get("username", None)
     password: str  = request.json.get("password", None)
     user: User = session.query(User).filter_by(username=username, password=password).first()
