@@ -11,9 +11,9 @@ login: Blueprint = Blueprint("login", __name__)
 
 @login.route("/login", methods=["POST"])
 def login():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-    user = session.query(User).filter_by(username=username, password=password).first()
+    username: str = request.json.get("username", None)
+    password: str  = request.json.get("password", None)
+    user: User = session.query(User).filter_by(username=username, password=password).first()
     if not user:
         return {"msg": "Incorrect username or password"}, 403
 
