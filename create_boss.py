@@ -13,6 +13,11 @@ def create_boss(first_name: str, last_name: str, username: str, password: str):
         session.add(boss)
         session.commit()
 
+        print('Руководитель успешно создан!')
+
+    else:
+        print('Руководитель уже создан...')
+
 
 if __name__ == '__main__':
     create_boss(
