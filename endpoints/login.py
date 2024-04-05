@@ -18,4 +18,4 @@ def login():
         return {"msg": "Incorrect username or password"}, 403
 
     access_token = create_access_token(identity=username)
-    return {"access_token": access_token}
+    return {"accessToken": access_token}
