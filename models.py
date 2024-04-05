@@ -1,53 +1,62 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import Integer, Column, create_engine, ForeignKey, String, Boolean, Text
 
-db = SQLAlchemy()
+Base = declarative_base()
+engine = create_engine(url="sqlite:///db.db")
+session = scoped_session(
+    sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=engine,
+    )
+)
 
 
-class User(UserMixin, db.Model):
+class User(Base):
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(100))
-    is_recruiter = db.Column(db.Boolean)
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    username = Column(String(50), unique=True)
+    password = Column(String(100))
+    is_hr = Column(Boolean)
 
 
-class Task(db.Model):
+class Task(Base):
     __tablename__ = "tasks"
-    id = db.Column(db.Integer, primary_key=True)
-    recruiter_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    description = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    recruiter_id = Column(Integer, ForeignKey("users.id"))
+    description = Column(Text)
 
 
-class Vacancy(db.Model):
+class Vacancy(Base):
     __tablename__ = "vacancies"
-    id = db.Column(db.Integer, primary_key=True)
-    theme = db.Column(db.String(100))
-    job_title = db.Column(db.String(100))
-    location = db.Column(db.String(100))
-    salary_range = db.Column(db.String(50))
-    privileges = db.Column(db.Text)
-    responsibilities = db.Column(db.Text)
-    requirements = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    theme = Column(String(100))
+    job_title = Column(String(100))
+    location = Column(String(100))
+    salary_range = Column(String(50))
+    privileges = Column(Text)
+    responsibilities = Column(Text)
+    requirements = Column(Text)
 
 
-class Recruit(db.Model):
+class Recruit(Base):
     __tablename__ = "recruits"
-    id = db.Column(db.Integer, primary_key=True)
-    file_path = db.Column(db.String(255))
-    vacancy_id = db.Column(db.Integer, db.ForeignKey("vacancies"))
+    id = Column(Integer, primary_key=True)
+    file_path = Column(String(255))
+    vacancy_id = Column(Integer, ForeignKey("vacancies"))
 
 
-class Offer(db.Model):
+class Offer(Base):
     __tablename__ = "offers"
-    id = db.Column(db.Integer, primary_key=True)
-    vacancy_id = db.Column(db.Integer, db.ForeignKey("vacancies.id"))
-    recruit_id = db.Column(db.Integer, db.ForeignKey("recruits.id"))
+    id = Column(Integer, primary_key=True)
+    vacancy_id = Column(Integer, ForeignKey("vacancies.id"))
+    recruit_id = Column(Integer, ForeignKey("recruits.id"))
 
 
-class Comment(db.Model):
+class Comment(Base):
     __tablename__ = "comments"
-    text = db.Column(db.Text)
-    recruit_id = db.Column(db.Integer, db.ForeignKey("recruits.id"))
+    text = Column(Text)
+    recruit_id = Column(Integer, ForeignKey("recruits.id"))
