@@ -3,7 +3,6 @@ from typing import List
 
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
-from werkzeug.datastructures import FileStorage
 
 from config import UPLOAD_RECRUITS_FOLDER
 from models import session, Recruit
@@ -11,54 +10,30 @@ from flasgger import swag_from
 
 __all__ = ("hr",)
 
+from swagger import SWAGGER_UPLOAD_RECRUITS, SWAGGER_UPDATE_RECRUIT_STEP
+
 hr: Blueprint = Blueprint("hr", __name__)
 
 
 @hr.route("/hr/upload_recruits", methods=["POST"])
-@swag_from({
-    'tags': ['HR'],
-    'summary': 'Upload Recruits',
-    'description': 'Endpoint to upload recruits.',
-    'parameters': [
-        {
-            'name': 'taskId',
-            'in': 'query',
-            'type': 'integer',
-            'required': True,
-            'description': 'Task ID associated with recruits'
-        },
-        {
-            'name': 'files',
-            'in': 'formData',
-            'type': 'file',
-            'required': True,
-            'description': 'PDF files containing recruit information',
-            'multiple': True
-        }
-    ],
-    'responses': {
-        200: {'description': 'Recruits uploaded successfully'},
-        400: {'description': 'No file provided or invalid data'}
-    }
-})
+@swag_from(SWAGGER_UPLOAD_RECRUITS)
 @jwt_required()
 def upload_recruits():
     if not request.files:
         return {"msg": "No file"}, 400
 
     try:
-        task_id: int = int(request.args['taskId'])
+        task_id: int = int(request.args["taskId"])
     except (KeyError, ValueError):
-        return {'msg': 'Invalid data'}, 400
+        return {"msg": "Invalid data"}, 400
 
-    for filename in request.files:
-        file: FileStorage = request.files[filename]
-        if file.filename.endswith(".pdf"):
+    for file_storage in request.files.getlist("files"):
+        if file_storage.filename.endswith(".pdf"):
             recruit: Recruit = Recruit(task_id=task_id)
             session.add(recruit)
             session.flush()
 
-            file.save(os.path.join(UPLOAD_RECRUITS_FOLDER, str(recruit.id)))
+            file_storage.save(os.path.join(UPLOAD_RECRUITS_FOLDER, str(recruit.id)))
 
     session.commit()
 
@@ -77,30 +52,7 @@ def upload_recruits():
 
 
 @hr.route("/hr/update_recruit_step", methods=["PUT"])
-@swag_from({
-    'tags': ['HR'],
-    'summary': 'Update Recruit Step',
-    'description': 'Endpoint to update recruit step.',
-    'parameters': [
-        {
-            'name': 'body',
-            'in': 'body',
-            'required': True,
-            'description': 'Recruit ID and new step number',
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    'recruitId': {'type': 'integer'},
-                    'stepNum': {'type': 'integer'}
-                }
-            }
-        }
-    ],
-    'responses': {
-        200: {'description': 'Recruit step updated successfully'},
-        400: {'description': 'No such recruit'}
-    }
-})
+@swag_from(SWAGGER_UPDATE_RECRUIT_STEP)
 @jwt_required()
 def update_recruit_step():
     step_num: int = request.json.get("stepNum", None)
@@ -111,3 +63,4 @@ def update_recruit_step():
     recruit.step_num = step_num
     session.add(recruit)
     session.commit()
+    return {"msg": "Operation is completed"}, 200
