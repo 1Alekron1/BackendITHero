@@ -5,11 +5,12 @@ from config import (
     PORT,
     DEBUG,
 )
+from boss import boss
 
 app: Flask = Flask(__name__)
 
 BLUEPRINTS: list[Blueprint] = [
-
+    boss,
 ]
 for blueprint in BLUEPRINTS:
     app.register_blueprint(blueprint)
