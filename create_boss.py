@@ -12,3 +12,12 @@ def create_boss(first_name: str, last_name: str, username: str, password: str):
         )
         session.add(boss)
         session.commit()
+
+
+if __name__ == '__main__':
+    create_boss(
+        first_name=input('Ваше имя '),
+        last_name=input('Ваша фамилия '),
+        username=input('username '),
+        password=input('password '),
+    )
