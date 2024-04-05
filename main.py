@@ -1,10 +1,7 @@
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-<<<<<<< HEAD
 from flasgger import Swagger
-=======
->>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 
 from config import (
     HOST,
@@ -21,7 +18,7 @@ from endpoints.login import login
 
 app: Flask = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = JWT_ACCESS_TOKEN_EXPIRES
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = JWT_ACCESS_TOKEN_EXPIRES
 jwt = JWTManager(app)
 swagger = Swagger(app)
 
@@ -39,7 +36,7 @@ for blueprint in BLUEPRINTS:
 
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data) -> User | None:
-    identity: str = jwt_data['sub']
+    identity: str = jwt_data["sub"]
     try:
         user = session.query(User).filter_by(username=identity).first()
         return user
