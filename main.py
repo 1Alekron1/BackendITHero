@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from config import (
     HOST,
@@ -19,6 +20,7 @@ app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = JWT_ACCESS_TOKEN_EXPIRES
 jwt = JWTManager(app)
 
+CORS(app)
 
 BLUEPRINTS: list[Blueprint] = [
     login,
