@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required
 from models import (
     User,
     Task,
+    Recruit,
     session,
 )
 
@@ -36,38 +37,113 @@ def register_hr():
     session.add(hr)
     session.commit()
 
-    return {'msg': 'HR was created'}, 201
+    return {
+        'id': hr.id,
+        'firstName': hr.first_name,
+        'lastName': hr.last_name,
+    }, 201
 
 
 @boss.route('/boss/get_hrs', methods=['GET'])
 @jwt_required()
 def get_hrs():
     hrs = []
-    for hr in session.query(User).filter_by(is_hr=True):
+    for hr in session.query(User).filter_by(is_hr=True).all():
         hrs.append({
             'id': hr.id,
             'firstName': hr.first_name,
             'lastName': hr.last_name,
         })
 
-    return hrs
+    return hrs, 200
 
 
 @boss.route('/boss/create_task', methods=['POST'])
 def create_task():
-    pass
+    hr_id: int | None
+    try:
+        hr_id = int(request.json['hrId'])
+    except ValueError:
+        hr_id = None
+
+    try:
+        theme: str = str(request.json['theme'])
+        description: str = str(request.json['description'])
+        salary_range: str = str(request.json['salaryRange'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    task: Task = Task(
+        hr_id=hr_id,
+        theme=theme,
+        description=description,
+        salary_range=salary_range,
+    )
+    session.add(task)
+    session.commit()
+
+    return {
+        'id': task.id,
+        'hrId': task.hr_id,
+        'theme': task.theme,
+        'description': task.description,
+        'salaryRange': task.salary_range,
+    }, 201
 
 
 @boss.route('/boss/set_task_to_hr', methods=['PUT'])
 def set_task_to_hr():
-    pass
+    try:
+        task_id: int = int(request.json['taskId'])
+        hr_id: int = int(request.json['hrId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    task: Task | None = session.query(Task).filter_by(
+        id=task_id,
+    ).one()
+    if not task:
+        return {'msg': 'Task not found'}, 404
+
+    task.hr_id = hr_id
+    session.commit()
+
+    return {'msg': 'Operation is completed'}, 200
 
 
 @boss.route('/boss/set_task_as_completed', methods=['PUT'])
 def set_task_as_completed():
-    pass
+    try:
+        task_id: int = int(request.json['taskId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    task: Task | None = session.query(Task).filter_by(
+        id=task_id,
+    ).one()
+    if not task:
+        return {'msg': 'Task not found'}, 404
+
+    task.is_completed = True
+    session.commit()
+
+    return {'msg': 'Operation is completed'}, 200
 
 
 @boss.route('/boss/set_offer_to_recruit', methods=['PUT'])
 def set_offer_to_recruit():
-    pass
+    try:
+        recruit_id: int = int(request.json['recruitId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    recruit: Recruit | None = session.query(Recruit).filter_by(
+        id=recruit_id,
+    ).one()
+    if not recruit:
+        return {'msg': 'Recruit not found'}, 404
+
+    recruit.got_offer = True
+    session.commit()
+
+    return {'msg': 'Operation is completed'}, 200
