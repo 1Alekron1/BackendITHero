@@ -32,7 +32,7 @@ class Task(Base):
     theme = Column(String(100))
     description = Column(Text)
     salary_range = Column(String(50))
-    is_completed = Column(Boolean)
+    is_completed = Column(Boolean, default=False)
 
 
 class Recruit(Base):
