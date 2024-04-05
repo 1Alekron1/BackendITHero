@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_from_directory
 
 from models import (
     session,
@@ -48,7 +48,6 @@ def get_recruits_by_task():
             'id': recruit.id,
             'taskId': recruit.task_id,
             'stepNum': recruit.step_num,
-            'fileUrl': '...',
             'gotOffer': recruit.got_offer,
         })
 
@@ -101,3 +100,14 @@ def get_comments_by_recruit_step():
         })
 
     return comments, 200
+
+
+@common.route('/common/get_recruit_file', methods=['GET'])
+def get_recruit_file():
+    try:
+        recruit_id: int = int(request.args['recruitId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    path = './recruits/' + str(recruit_id)
+    return send_from_directory('media', path)
