@@ -1,4 +1,11 @@
-from flask import Blueprint
+from flask import Blueprint, request
+
+from models import (
+    session,
+    Task,
+    Recruit,
+    Comment,
+)
 
 __all__ = (
     'common',
@@ -7,21 +14,90 @@ __all__ = (
 common: Blueprint = Blueprint('common', __name__)
 
 
-@common.route('/common/get_tasks', methods=['GET'])
-def get_tasks():
-    pass
+@common.route('/common/get_tasks_by_hr', methods=['GET'])
+def get_tasks_by_hr():
+    try:
+        hr_id: int = int(request.args['hrId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    tasks = []
+    for task in session.query(Task).filter_by(hr_id=hr_id):
+        tasks.append({
+            'id': task.id,
+            'hrId': task.hr_id,
+            'theme': task.theme,
+            'description': task.description,
+            'salaryRange': task.salary_range,
+            'isCompleted': task.is_completed,
+        })
+
+    return tasks, 200
 
 
 @common.route('/common/get_recruits_by_task', methods=['GET'])
 def get_recruits_by_task():
-    pass
+    try:
+        task_id: int = int(request.args['taskId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
 
+    recruits = []
+    for recruit in session.query(Recruit).filter_by(task_id=task_id):
+        recruits.append({
+            'id': recruit.id,
+            'taskId': recruit.task_id,
+            'stepNum': recruit.step_num,
+            'fileUrl': '...',
+            'gotOffer': recruit.got_offer,
+        })
 
-@common.route('/common/get_steps_by_recruit', methods=['GET'])
-def get_steps_by_recruit():
-    pass
+    return recruits, 200
 
 
 @common.route('/common/add_comment_to_recruit_step', methods=['POST'])
 def add_comment_to_recruit_step():
-    pass
+    try:
+        recruit_id: int = int(request.json['recruitId'])
+        text: str = str(request.json['text'])
+        step_num: int = int(request.json['stepNum'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    comment: Comment = Comment(
+        recruit_id=recruit_id,
+        text=text,
+        step_num=step_num,
+    )
+    session.add(comment)
+    session.commit()
+
+    return {
+        'id': comment.id,
+        'recruitId': comment.recruit_id,
+        'text': comment.text,
+        'stepNum': comment.step_num,
+    }, 201
+
+
+@common.route('/common/get_comments_by_recruit_step', methods=['GET'])
+def get_comments_by_recruit_step():
+    try:
+        recruit_id: int = int(request.json['recruitId'])
+        step_num: int = int(request.json['stepNum'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    comments = []
+    for comment in session.query(Comment).filter_by(
+        recruit_id=recruit_id,
+        step_num=step_num,
+    ):
+        comments.append({
+            'id': comment.id,
+            'recruitId': comment.recruit_id,
+            'text': comment.text,
+            'stepNum': comment.step_num,
+        })
+
+    return comments, 200
