@@ -9,7 +9,7 @@ SWAGGER_REGISTER_HR = {
             "required": True,
             "description": "New HR user details",
             "schema": {
-                "type": "object",
+                "type": "array",
                 "properties": {
                     "firstName": {"type": "string"},
                     "lastName": {"type": "string"},
@@ -513,7 +513,7 @@ SWAGGER_GET_RECRUITS_BY_TASK = {
         200: {
             "description": "List of recruits associated with the task",
             "schema": {
-                "type": "object",
+                "type": "array",
                 "properties": {
                     "id": {"type": "integer"},
                     "taskId": {"type": "integer"},
@@ -620,6 +620,78 @@ SWAGGER_LOGIN = {
                         "example": "Incorrect username or password",
                     }
                 },
+            },
+        },
+    },
+}
+
+
+GET_COMMENTS_BY_RECRUIT_STEP = {
+    "tags": ["Common"],
+    "summary": "Get Comments by Recruit Step",
+    "description": "Endpoint to get comments by a recruit's step.",
+    "parameters": [
+        {
+            "name": "recruitId",
+            "in": "query",
+            "type": "integer",
+            "required": True,
+            "description": "ID of the recruit to fetch comments for.",
+        },
+        {
+            "name": "stepNum",
+            "in": "query",
+            "type": "integer",
+            "required": True,
+            "description": "Step number to fetch comments for.",
+        },
+    ],
+    "responses": {
+        200: {
+            "description": "List of comments for the recruit's step",
+            "schema": {
+                "type": "array",
+                "properties": {
+                    "id": {"type": "integer"},
+                    "recruitId": {"type": "integer"},
+                    "text": {"type": "string"},
+                    "stepNum": {"type": "integer"},
+                },
+            },
+        },
+        400: {
+            "schema": {
+                "type": "object",
+                "properties": {"msg": {"type": "string", "example": "Invalid data"}},
+            },
+        },
+    },
+}
+
+GET_RECRUIT_FILE = {
+    "tags": ["Common"],
+    "summary": "Get Recruit File",
+    "description": "Endpoint to get recruit file.",
+    "parameters": [
+        {
+            "name": "recruitId",
+            "in": "query",
+            "type": "integer",
+            "required": True,
+            "description": "ID of the recruit to fetch file for.",
+        }
+    ],
+    "responses": {
+        200: {
+            "description": "Recruit file retrieved successfully",
+            "schema": {
+                "type": "file",
+            },
+        },
+        400: {
+            "schema": {
+                "type": "object",
+                "properties": {"msg": {"type": "string", "example": "Invalid data"}},
             },
         },
     },

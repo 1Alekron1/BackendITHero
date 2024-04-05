@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, send_from_directory
 from flask_jwt_extended import jwt_required, current_user
 from flasgger import swag_from
 
@@ -14,7 +14,7 @@ from swagger import (
     SWAGGER_GET_RECRUITS_BY_TASK,
     SWAGGER_GET_TASKS_BY_HR,
     SWAGGER_GET_USER,
-    SWAGGER_GET_SELF,
+    SWAGGER_GET_SELF, GET_COMMENTS_BY_RECRUIT_STEP,
 )
 
 __all__ = ("common",)
@@ -127,3 +127,43 @@ def add_comment_to_recruit_step():
         "text": comment.text,
         "stepNum": comment.step_num,
     }, 201
+
+
+@common.route('/common/get_comments_by_recruit_step', methods=['GET'])
+@jwt_required()
+@swag_from(GET_COMMENTS_BY_RECRUIT_STEP)
+def get_comments_by_recruit_step():
+    try:
+        recruit_id: int = int(request.args['recruitId'])
+        step_num: int = int(request.args['stepNum'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    comments = []
+    for comment in session.query(Comment).filter_by(
+        recruit_id=recruit_id,
+        step_num=step_num,
+    ):
+        comments.append({
+            'id': comment.id,
+            'recruitId': comment.recruit_id,
+            'text': comment.text,
+            'stepNum': comment.step_num,
+        })
+
+    return comments, 200
+
+
+
+
+@common.route('/common/get_recruit_file', methods=['GET'])
+@jwt_required()
+@swag_from()
+def get_recruit_file():
+    try:
+        recruit_id: int = int(request.args['recruitId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    path = './recruits/' + str(recruit_id)
+    return send_from_directory('media', path)
