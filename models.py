@@ -15,6 +15,7 @@ session = scoped_session(
 
 class User(Base):
     __tablename__ = "users"
+
     id = Column(Integer, primary_key=True)
     first_name = Column(String(50))
     last_name = Column(String(50))
@@ -25,38 +26,34 @@ class User(Base):
 
 class Task(Base):
     __tablename__ = "tasks"
+
     id = Column(Integer, primary_key=True)
     hr_id = Column(Integer, ForeignKey("users.id"))
-    description = Column(Text)
-
-
-class Vacancy(Base):
-    __tablename__ = "vacancies"
-    id = Column(Integer, primary_key=True)
     theme = Column(String(100))
-    job_title = Column(String(100))
-    location = Column(String(100))
+    description = Column(Text)
     salary_range = Column(String(50))
-    privileges = Column(Text)
-    responsibilities = Column(Text)
-    requirements = Column(Text)
 
 
 class Recruit(Base):
     __tablename__ = "recruits"
+
     id = Column(Integer, primary_key=True)
+    task_id = Column(Integer, ForeignKey("tasks.id"))
+    step_num = Column(Integer)
     file_path = Column(String(255))
-    vacancy_id = Column(Integer, ForeignKey("vacancies"))
 
 
 class Offer(Base):
     __tablename__ = "offers"
+
     id = Column(Integer, primary_key=True)
-    vacancy_id = Column(Integer, ForeignKey("vacancies.id"))
     recruit_id = Column(Integer, ForeignKey("recruits.id"))
 
 
 class Comment(Base):
     __tablename__ = "comments"
-    text = Column(Text)
+
+    id = Column(Integer, primary_key=True)
     recruit_id = Column(Integer, ForeignKey("recruits.id"))
+    text = Column(Text)
+    step_num = Column(Integer)
