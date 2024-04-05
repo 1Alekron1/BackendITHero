@@ -11,6 +11,7 @@ from models import Base, engine
 from endpoints.boss import boss
 from endpoints.hr import hr
 from endpoints.common import common
+from endpoints.login import login
 
 app: Flask = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
@@ -18,6 +19,7 @@ jwt = JWTManager(app)
 
 
 BLUEPRINTS: list[Blueprint] = [
+    login,
     boss,
     hr,
     common,
