@@ -14,8 +14,9 @@ hr: Blueprint = Blueprint("hr", __name__)
 
 @hr.route("/hr/upload_recruits", methods=["POST"])
 def upload_recruits():
-    if "file" not in request.files:
+    if not request.files:
         return {"msg": "No file"}, 400
+
     task_id: int = request.json().get("taskId", None)
     for filename in request.files:
         file: FileStorage = request.files[filename]
