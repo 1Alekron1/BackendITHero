@@ -1,6 +1,9 @@
 import os
+from typing import List
 
 from flask import Blueprint, request
+from werkzeug.datastructures import FileStorage
+
 from config import UPLOAD_RECRUITS_FOLDER
 from models import session, Recruit
 
@@ -13,24 +16,22 @@ hr: Blueprint = Blueprint("hr", __name__)
 def upload_recruits():
     if "file" not in request.files:
         return {"msg": "No file"}, 400
-    task_id = request.json().get("taskId", None)
+    task_id: int = request.json().get("taskId", None)
     for filename in request.files:
-        file = request.files[filename]
+        file: FileStorage = request.files[filename]
         if file.filename.endswith(".pdf"):
             file.save(os.path.join(UPLOAD_RECRUITS_FOLDER, file.filename))
-            recruit: Recruit = Recruit(
-                task_id=task_id, file_path=UPLOAD_RECRUITS_FOLDER + file.filename
-            )
+            recruit: Recruit = Recruit(task_id=task_id)
             session.add(recruit)
     session.commit()
-    recruits = []
+
+    recruits: List = []
     for recruit in session.query(Recruit).filter_by(task_id=task_id):
         recruits.append(
             {
                 "id": recruit.id,
                 "taskId": recruit.task_id,
                 "stepNum": recruit.step_num,
-                "fileUrl": "...",
                 "gotOffer": recruit.got_offer,
             }
         )
@@ -40,9 +41,9 @@ def upload_recruits():
 
 @hr.route("/hr/update_recruit_step", methods=["PUT"])
 def update_recruit_step():
-    step_num = request.json.get("stepNum", None)
-    recruit_id = request.json.get("recruitId", None)
-    recruit = session.query(Recruit).filter_by(id=recruit_id).first()
+    step_num: int = request.json.get("stepNum", None)
+    recruit_id: int = request.json.get("recruitId", None)
+    recruit: Recruit = session.query(Recruit).filter_by(id=recruit_id).first()
     if not recruit:
         return {"msg": "No such recruit"}, 400
     recruit.step_num = step_num
