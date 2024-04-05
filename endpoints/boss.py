@@ -63,7 +63,7 @@ def create_task():
     hr_id: int | None
     try:
         hr_id = int(request.json['hrId'])
-    except ValueError:
+    except (KeyError, ValueError):
         hr_id = None
 
     try:
