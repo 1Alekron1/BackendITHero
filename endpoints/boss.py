@@ -101,7 +101,7 @@ def set_task_to_hr():
 
     task: Task | None = session.query(Task).filter_by(
         id=task_id,
-    ).one()
+    ).first()
     if not task:
         return {'msg': 'Task not found'}, 404
 
@@ -120,7 +120,7 @@ def set_task_as_completed():
 
     task: Task | None = session.query(Task).filter_by(
         id=task_id,
-    ).one()
+    ).first()
     if not task:
         return {'msg': 'Task not found'}, 404
 
@@ -139,7 +139,7 @@ def set_offer_to_recruit():
 
     recruit: Recruit | None = session.query(Recruit).filter_by(
         id=recruit_id,
-    ).one()
+    ).first()
     if not recruit:
         return {'msg': 'Recruit not found'}, 404
 
