@@ -26,6 +26,14 @@ hr: Blueprint = Blueprint("hr", __name__)
             'type': 'integer',
             'required': True,
             'description': 'Task ID associated with recruits'
+        },
+        {
+            'name': 'files',
+            'in': 'formData',
+            'type': 'file',
+            'required': True,
+            'description': 'PDF files containing recruit information',
+            'multiple': True
         }
     ],
     'responses': {
