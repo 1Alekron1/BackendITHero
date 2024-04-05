@@ -1,7 +1,10 @@
 from flask import Flask, Blueprint
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+<<<<<<< HEAD
 from flasgger import Swagger
+=======
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 
 from config import (
     HOST,

@@ -2,6 +2,7 @@ import os
 from typing import List
 
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from werkzeug.datastructures import FileStorage
 
 from config import UPLOAD_RECRUITS_FOLDER
@@ -14,6 +15,7 @@ hr: Blueprint = Blueprint("hr", __name__)
 
 
 @hr.route("/hr/upload_recruits", methods=["POST"])
+<<<<<<< HEAD
 @swag_from({
     'tags': ['HR'],
     'summary': 'Upload Recruits',
@@ -32,6 +34,9 @@ hr: Blueprint = Blueprint("hr", __name__)
         400: {'description': 'No file provided or invalid data'}
     }
 })
+=======
+@jwt_required()
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 def upload_recruits():
     if not request.files:
         return {"msg": "No file"}, 400
@@ -67,6 +72,7 @@ def upload_recruits():
 
 
 @hr.route("/hr/update_recruit_step", methods=["PUT"])
+<<<<<<< HEAD
 @swag_from({
     'tags': ['HR'],
     'summary': 'Update Recruit Step',
@@ -91,6 +97,9 @@ def upload_recruits():
         400: {'description': 'No such recruit'}
     }
 })
+=======
+@jwt_required()
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 def update_recruit_step():
     step_num: int = request.json.get("stepNum", None)
     recruit_id: int = request.json.get("recruitId", None)

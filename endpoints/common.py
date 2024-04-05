@@ -1,7 +1,9 @@
 from flask import Blueprint, request, send_from_directory
+from flask_jwt_extended import jwt_required, current_user
 
 from models import (
     session,
+    User,
     Task,
     Recruit,
     Comment,
@@ -14,7 +16,37 @@ __all__ = (
 common: Blueprint = Blueprint('common', __name__)
 
 
+@common.route('/common/get_self', methods=['GET'])
+@jwt_required()
+def get_self():
+    return {
+        'id': current_user.id,
+        'firstName': current_user.first_name,
+        'lastName': current_user.last_name,
+    }, 200
+
+
+@common.route('/common/get_user', methods=['GET'])
+@jwt_required()
+def get_user():
+    try:
+        user_id: int = int(request.args['userId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    user: User | None = session.query(User).filter_by(id=user_id).first()
+    if not user:
+        return {'msg': 'User not found'}, 404
+
+    return {
+        'id': user.id,
+        'firstName': user.first_name,
+        'lastName': user.last_name,
+    }, 200
+
+
 @common.route('/common/get_tasks_by_hr', methods=['GET'])
+@jwt_required()
 def get_tasks_by_hr():
     try:
         hr_id: int = int(request.args['hrId'])
@@ -36,6 +68,7 @@ def get_tasks_by_hr():
 
 
 @common.route('/common/get_recruits_by_task', methods=['GET'])
+@jwt_required()
 def get_recruits_by_task():
     try:
         task_id: int = int(request.args['taskId'])
@@ -55,6 +88,7 @@ def get_recruits_by_task():
 
 
 @common.route('/common/add_comment_to_recruit_step', methods=['POST'])
+@jwt_required()
 def add_comment_to_recruit_step():
     try:
         recruit_id: int = int(request.json['recruitId'])
@@ -80,6 +114,7 @@ def add_comment_to_recruit_step():
 
 
 @common.route('/common/get_comments_by_recruit_step', methods=['GET'])
+@jwt_required()
 def get_comments_by_recruit_step():
     try:
         recruit_id: int = int(request.args['recruitId'])
@@ -103,6 +138,7 @@ def get_comments_by_recruit_step():
 
 
 @common.route('/common/get_recruit_file', methods=['GET'])
+@jwt_required()
 def get_recruit_file():
     try:
         recruit_id: int = int(request.args['recruitId'])

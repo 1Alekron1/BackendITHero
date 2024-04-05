@@ -118,6 +118,7 @@ def get_hrs():
 
 
 @boss.route('/boss/create_task', methods=['POST'])
+<<<<<<< HEAD
 @swag_from({
     'tags': ['Boss'],
     'summary': 'Create a new task',
@@ -156,6 +157,9 @@ def get_hrs():
         400: {'description': 'Invalid data provided'}
     }
 })
+=======
+@jwt_required()
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 def create_task():
     hr_id: int | None
     try:
@@ -189,6 +193,7 @@ def create_task():
 
 
 @boss.route('/boss/set_task_to_hr', methods=['PUT'])
+<<<<<<< HEAD
 @swag_from({
     'tags': ['Boss'],
     'summary': 'Assign task to an HR user',
@@ -213,6 +218,9 @@ def create_task():
         400: {'description': 'Invalid data provided'}
     }
 })
+=======
+@jwt_required()
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 def set_task_to_hr():
     try:
         task_id: int = int(request.json['taskId'])
@@ -233,6 +241,7 @@ def set_task_to_hr():
 
 
 @boss.route('/boss/set_task_as_completed', methods=['PUT'])
+<<<<<<< HEAD
 @swag_from({
     'tags': ['Boss'],
     'summary': 'Mark task as completed',
@@ -256,6 +265,9 @@ def set_task_to_hr():
         400: {'description': 'Invalid data provided'}
     }
 })
+=======
+@jwt_required()
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 def set_task_as_completed():
     try:
         task_id: int = int(request.json['taskId'])
@@ -275,6 +287,7 @@ def set_task_as_completed():
 
 
 @boss.route('/boss/set_offer_to_recruit', methods=['PUT'])
+<<<<<<< HEAD
 @swag_from({
     'tags': ['Boss'],
     'summary': 'Mark task as completed',
@@ -298,6 +311,9 @@ def set_task_as_completed():
         400: {'description': 'Invalid data provided'}
     }
 })
+=======
+@jwt_required()
+>>>>>>> bf8b1439cf1c9776b9a811e2e7157d75b0540df2
 def set_offer_to_recruit():
     try:
         recruit_id: int = int(request.json['recruitId'])
