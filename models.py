@@ -45,13 +45,6 @@ class Recruit(Base):
     got_offer = Column(Boolean, default=False)
 
 
-class Offer(Base):
-    __tablename__ = "offers"
-
-    id = Column(Integer, primary_key=True)
-    recruit_id = Column(Integer, ForeignKey("recruits.id"))
-
-
 class Comment(Base):
     __tablename__ = "comments"
 
