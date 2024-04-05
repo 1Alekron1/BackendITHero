@@ -11,4 +11,4 @@ PORT = 8080
 DEBUG = True
 
 JWT_SECRET_KEY = '7IjXDJxIGLyQ3fCyfRSo4mE6WenEwEOQ'
-UPLOAD_RECRUITS_FOLDER = '/media/recruits/'
+UPLOAD_RECRUITS_FOLDER = './media/recruits/'

@@ -17,13 +17,20 @@ def upload_recruits():
     if not request.files:
         return {"msg": "No file"}, 400
 
-    task_id: int = request.json().get("taskId", None)
+    try:
+        task_id: int = int(request.args['taskId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
     for filename in request.files:
         file: FileStorage = request.files[filename]
         if file.filename.endswith(".pdf"):
-            file.save(os.path.join(UPLOAD_RECRUITS_FOLDER, file.filename))
             recruit: Recruit = Recruit(task_id=task_id)
             session.add(recruit)
+            session.flush()
+
+            file.save(os.path.join(UPLOAD_RECRUITS_FOLDER, str(recruit.id)))
+
     session.commit()
 
     recruits: List = []
