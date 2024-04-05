@@ -1,5 +1,5 @@
 from flask import Blueprint, request, send_from_directory
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, current_user
 
 from models import (
     session,
@@ -14,6 +14,16 @@ __all__ = (
 )
 
 common: Blueprint = Blueprint('common', __name__)
+
+
+@common.route('/common/get_self', methods=['GET'])
+@jwt_required()
+def get_self():
+    return {
+        'id': current_user.id,
+        'firstName': current_user.first_name,
+        'lastName': current_user.last_name,
+    }, 200
 
 
 @common.route('/common/get_user', methods=['GET'])
