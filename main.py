@@ -6,11 +6,13 @@ from config import (
     DEBUG,
 )
 from boss import boss
+from hr import hr
 
 app: Flask = Flask(__name__)
 
 BLUEPRINTS: list[Blueprint] = [
     boss,
+    hr,
 ]
 for blueprint in BLUEPRINTS:
     app.register_blueprint(blueprint)
