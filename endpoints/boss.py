@@ -59,6 +59,7 @@ def get_hrs():
 
 
 @boss.route('/boss/create_task', methods=['POST'])
+@jwt_required()
 def create_task():
     hr_id: int | None
     try:
@@ -92,6 +93,7 @@ def create_task():
 
 
 @boss.route('/boss/set_task_to_hr', methods=['PUT'])
+@jwt_required()
 def set_task_to_hr():
     try:
         task_id: int = int(request.json['taskId'])
@@ -112,6 +114,7 @@ def set_task_to_hr():
 
 
 @boss.route('/boss/set_task_as_completed', methods=['PUT'])
+@jwt_required()
 def set_task_as_completed():
     try:
         task_id: int = int(request.json['taskId'])
@@ -131,6 +134,7 @@ def set_task_as_completed():
 
 
 @boss.route('/boss/set_offer_to_recruit', methods=['PUT'])
+@jwt_required()
 def set_offer_to_recruit():
     try:
         recruit_id: int = int(request.json['recruitId'])

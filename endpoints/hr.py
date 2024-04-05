@@ -2,6 +2,7 @@ import os
 from typing import List
 
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required
 from werkzeug.datastructures import FileStorage
 
 from config import UPLOAD_RECRUITS_FOLDER
@@ -13,6 +14,7 @@ hr: Blueprint = Blueprint("hr", __name__)
 
 
 @hr.route("/hr/upload_recruits", methods=["POST"])
+@jwt_required()
 def upload_recruits():
     if not request.files:
         return {"msg": "No file"}, 400
@@ -48,6 +50,7 @@ def upload_recruits():
 
 
 @hr.route("/hr/update_recruit_step", methods=["PUT"])
+@jwt_required()
 def update_recruit_step():
     step_num: int = request.json.get("stepNum", None)
     recruit_id: int = request.json.get("recruitId", None)
