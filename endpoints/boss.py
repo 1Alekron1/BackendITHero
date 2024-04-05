@@ -22,23 +22,13 @@ def create_task():
     pass
 
 
-@boss.route('/boss/set_task_for_hr', methods=['PUT'])
-def set_task_for_hr():
-    pass
-
-
-@boss.route('/boss/get_tasks', methods=['GET'])
-def get_tasks():
+@boss.route('/boss/set_task_to_hr', methods=['PUT'])
+def set_task_to_hr():
     pass
 
 
 @boss.route('/boss/set_task_as_completed', methods=['PUT'])
 def set_task_as_completed():
-    pass
-
-
-@boss.route('/boss/get_recruits_by_task', methods=['GET'])
-def get_recruits_by_task():
     pass
 
 
