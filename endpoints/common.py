@@ -2,6 +2,7 @@ from flask import Blueprint, request, send_from_directory
 
 from models import (
     session,
+    User,
     Task,
     Recruit,
     Comment,
@@ -12,6 +13,24 @@ __all__ = (
 )
 
 common: Blueprint = Blueprint('common', __name__)
+
+
+@common.route('/common/get_user', methods=['GET'])
+def get_user():
+    try:
+        user_id: int = int(request.args['userId'])
+    except (KeyError, ValueError):
+        return {'msg': 'Invalid data'}, 400
+
+    user: User | None = session.query(User).filter_by(id=user_id).first()
+    if not user:
+        return {'msg': 'User not found'}, 404
+
+    return {
+        'id': user.id,
+        'firstName': user.first_name,
+        'lastName': user.last_name,
+    }, 200
 
 
 @common.route('/common/get_tasks_by_hr', methods=['GET'])
