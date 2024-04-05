@@ -1,4 +1,9 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask, Blueprint
+from flask_jwt_extended import JWTManager
+from config import JWT_SECRET_KEY
 
 from config import (
     HOST,
@@ -7,7 +12,11 @@ from config import (
 )
 from boss import boss
 
+load_dotenv()
 app: Flask = Flask(__name__)
+app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
+jwt = JWTManager(app)
+
 
 BLUEPRINTS: list[Blueprint] = [
     boss,
@@ -16,7 +25,7 @@ for blueprint in BLUEPRINTS:
     app.register_blueprint(blueprint)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(
         host=HOST,
         port=PORT,
