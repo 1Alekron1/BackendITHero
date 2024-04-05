@@ -17,7 +17,7 @@
 <!-- ABOUT THE PROJECT -->
 ## О проекте
 
-TODO
+Веб-сервис, позволяющий автоматизировать процесс рекрутинга в компании.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
