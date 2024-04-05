@@ -9,6 +9,7 @@ hr: Blueprint = Blueprint('hr', __name__)
 
 @hr.route('/hr/upload_recruits', methods=['POST'])
 def upload_recruits():
+
     pass
 
 
