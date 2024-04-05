@@ -41,7 +41,6 @@ class Recruit(Base):
     id = Column(Integer, primary_key=True)
     task_id = Column(Integer, ForeignKey("tasks.id"))
     step_num = Column(Integer, default=0)
-    file_path = Column(String(255))
     got_offer = Column(Boolean, default=False)
 
 
