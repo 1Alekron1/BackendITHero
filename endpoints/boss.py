@@ -280,24 +280,24 @@ def set_task_as_completed():
 @boss.route('/boss/set_offer_to_recruit', methods=['PUT'])
 @swag_from({
     'tags': ['Boss'],
-    'summary': 'Mark task as completed',
-    'description': 'Allows the boss to mark a task as completed.',
+    'summary': 'Mark recruit as having received an offer',
+    'description': 'Allows the boss to mark a recruit as having received an offer.',
     'parameters': [
         {
             'name': 'body',
             'in': 'body',
             'required': True,
-            'description': 'Task ID',
+            'description': 'Recruit ID',
             'schema': {
                 'type': 'object',
                 'properties': {
-                    'taskId': {'type': 'integer'}
+                    'recruitId': {'type': 'integer'}
                 }
             }
         }
     ],
     'responses': {
-        200: {'description': 'Task marked as completed successfully'},
+        200: {'description': 'Recruit marked as having received an offer successfully'},
         400: {'description': 'Invalid data provided'}
     }
 })
