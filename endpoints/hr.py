@@ -6,6 +6,7 @@ from werkzeug.datastructures import FileStorage
 
 from config import UPLOAD_RECRUITS_FOLDER
 from models import session, Recruit
+from flasgger import swag_from
 
 __all__ = ("hr",)
 
@@ -13,6 +14,24 @@ hr: Blueprint = Blueprint("hr", __name__)
 
 
 @hr.route("/hr/upload_recruits", methods=["POST"])
+@swag_from({
+    'tags': ['HR'],
+    'summary': 'Upload Recruits',
+    'description': 'Endpoint to upload recruits.',
+    'parameters': [
+        {
+            'name': 'taskId',
+            'in': 'query',
+            'type': 'integer',
+            'required': True,
+            'description': 'Task ID associated with recruits'
+        }
+    ],
+    'responses': {
+        200: {'description': 'Recruits uploaded successfully'},
+        400: {'description': 'No file provided or invalid data'}
+    }
+})
 def upload_recruits():
     if not request.files:
         return {"msg": "No file"}, 400
@@ -48,6 +67,30 @@ def upload_recruits():
 
 
 @hr.route("/hr/update_recruit_step", methods=["PUT"])
+@swag_from({
+    'tags': ['HR'],
+    'summary': 'Update Recruit Step',
+    'description': 'Endpoint to update recruit step.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'Recruit ID and new step number',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'recruitId': {'type': 'integer'},
+                    'stepNum': {'type': 'integer'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Recruit step updated successfully'},
+        400: {'description': 'No such recruit'}
+    }
+})
 def update_recruit_step():
     step_num: int = request.json.get("stepNum", None)
     recruit_id: int = request.json.get("recruitId", None)

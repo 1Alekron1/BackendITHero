@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+from flasgger import swag_from
 
 from models import (
     User,
@@ -18,6 +19,42 @@ boss: Blueprint = Blueprint('boss', __name__)
 
 @boss.route('/boss/register_hr', methods=['POST'])
 @jwt_required()
+@swag_from({
+    'tags': ['Boss'],
+    'summary': 'Register a new HR user',
+    'description': 'Allows the boss to register a new HR user with provided details.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'New HR user details',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'firstName': {'type': 'string'},
+                    'lastName': {'type': 'string'},
+                    'username': {'type': 'string'},
+                    'password': {'type': 'string'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        201: {
+            'description': 'New HR user registered successfully',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'id': {'type': 'integer'},
+                    'firstName': {'type': 'string'},
+                    'lastName': {'type': 'string'}
+                }
+            }
+        },
+        400: {'description': 'Invalid data provided'}
+    }
+})
 def register_hr():
     try:
         first_name: str = str(request.json['firstName'])
@@ -46,6 +83,28 @@ def register_hr():
 
 @boss.route('/boss/get_hrs', methods=['GET'])
 @jwt_required()
+@swag_from({
+    'tags': ['Boss'],
+    'summary': 'Get all HR users',
+    'description': 'Allows the boss to retrieve a list of all registered HR users.',
+    'responses': {
+        200: {
+            'description': 'List of HR users retrieved successfully',
+            'schema': {
+                'type': 'array',
+                'items': {
+                    'type': 'object',
+                    'properties': {
+                        'id': {'type': 'integer'},
+                        'firstName': {'type': 'string'},
+                        'lastName': {'type': 'string'}
+                    }
+                }
+            }
+        },
+        401: {'description': 'Unauthorized access'}
+    }
+})
 def get_hrs():
     hrs = []
     for hr in session.query(User).filter_by(is_hr=True).all():
@@ -59,6 +118,44 @@ def get_hrs():
 
 
 @boss.route('/boss/create_task', methods=['POST'])
+@swag_from({
+    'tags': ['Boss'],
+    'summary': 'Create a new task',
+    'description': 'Allows the boss to create a new task with provided details.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'New task details',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'hrId': {'type': 'integer'},
+                    'theme': {'type': 'string'},
+                    'description': {'type': 'string'},
+                    'salaryRange': {'type': 'string'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        201: {
+            'description': 'Task created successfully',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'id': {'type': 'integer'},
+                    'hrId': {'type': 'integer'},
+                    'theme': {'type': 'string'},
+                    'description': {'type': 'string'},
+                    'salaryRange': {'type': 'string'}
+                }
+            }
+        },
+        400: {'description': 'Invalid data provided'}
+    }
+})
 def create_task():
     hr_id: int | None
     try:
@@ -92,6 +189,30 @@ def create_task():
 
 
 @boss.route('/boss/set_task_to_hr', methods=['PUT'])
+@swag_from({
+    'tags': ['Boss'],
+    'summary': 'Assign task to an HR user',
+    'description': 'Allows the boss to assign a task to a specific HR user.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'Task and HR user IDs',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'taskId': {'type': 'integer'},
+                    'hrId': {'type': 'integer'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Task assigned successfully'},
+        400: {'description': 'Invalid data provided'}
+    }
+})
 def set_task_to_hr():
     try:
         task_id: int = int(request.json['taskId'])
@@ -112,6 +233,29 @@ def set_task_to_hr():
 
 
 @boss.route('/boss/set_task_as_completed', methods=['PUT'])
+@swag_from({
+    'tags': ['Boss'],
+    'summary': 'Mark task as completed',
+    'description': 'Allows the boss to mark a task as completed.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'Task ID',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'taskId': {'type': 'integer'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Task marked as completed successfully'},
+        400: {'description': 'Invalid data provided'}
+    }
+})
 def set_task_as_completed():
     try:
         task_id: int = int(request.json['taskId'])
@@ -131,6 +275,29 @@ def set_task_as_completed():
 
 
 @boss.route('/boss/set_offer_to_recruit', methods=['PUT'])
+@swag_from({
+    'tags': ['Boss'],
+    'summary': 'Mark task as completed',
+    'description': 'Allows the boss to mark a task as completed.',
+    'parameters': [
+        {
+            'name': 'body',
+            'in': 'body',
+            'required': True,
+            'description': 'Task ID',
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'taskId': {'type': 'integer'}
+                }
+            }
+        }
+    ],
+    'responses': {
+        200: {'description': 'Task marked as completed successfully'},
+        400: {'description': 'Invalid data provided'}
+    }
+})
 def set_offer_to_recruit():
     try:
         recruit_id: int = int(request.json['recruitId'])
