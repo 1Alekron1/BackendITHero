@@ -14,7 +14,7 @@ from swagger import (
     SWAGGER_GET_RECRUITS_BY_TASK,
     SWAGGER_GET_TASKS_BY_HR,
     SWAGGER_GET_USER,
-    SWAGGER_GET_SELF, GET_COMMENTS_BY_RECRUIT_STEP,
+    SWAGGER_GET_SELF, GET_COMMENTS_BY_RECRUIT_STEP, GET_RECRUIT_FILE,
 )
 
 __all__ = ("common",)
@@ -158,7 +158,7 @@ def get_comments_by_recruit_step():
 
 @common.route('/common/get_recruit_file', methods=['GET'])
 @jwt_required()
-@swag_from()
+@swag_from(GET_RECRUIT_FILE)
 def get_recruit_file():
     try:
         recruit_id: int = int(request.args['recruitId'])

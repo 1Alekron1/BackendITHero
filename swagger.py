@@ -9,7 +9,7 @@ SWAGGER_REGISTER_HR = {
             "required": True,
             "description": "New HR user details",
             "schema": {
-                "type": "array",
+                "type": "object",
                 "properties": {
                     "firstName": {"type": "string"},
                     "lastName": {"type": "string"},
@@ -469,7 +469,7 @@ SWAGGER_GET_TASKS_BY_HR = {
         200: {
             "description": "List of tasks assigned to the HR user",
             "schema": {
-                "type": "object",
+                "type": "array",
                 "properties": {
                     "id": {"type": "integer"},
                     "hrId": {"type": "integer"},
